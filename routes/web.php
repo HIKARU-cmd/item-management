@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ProcessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +21,24 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// ログイン必須のルーティング
+Route::middleware('auth')->group(function(){
 
-Route::prefix('items')->group(function () {
-    Route::get('/', [App\Http\Controllers\ItemController::class, 'index']);
-    Route::get('/add', [App\Http\Controllers\ItemController::class, 'add']);
-    Route::post('/add', [App\Http\Controllers\ItemController::class, 'add']);
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::prefix('items')->group(function () {
+        Route::get('/', [App\Http\Controllers\ItemController::class, 'index']);
+        Route::get('/add', [App\Http\Controllers\ItemController::class, 'add']);
+        Route::post('/add', [App\Http\Controllers\ItemController::class, 'add']);
+    });
+
+    Route::prefix('processes')->group(function () {
+        Route::get('/', [App\Http\Controllers\ProcessController::class, 'index']);
+        Route::post('/', [App\Http\Controllers\ProcessController::class, 'add']);
+        Route::get('/add', [App\Http\Controllers\ProcessController::class, 'add']);
+    });
+    
 });
+
+
+
