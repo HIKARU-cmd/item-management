@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Item extends Model
 {
@@ -14,8 +15,13 @@ class Item extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'type',
+        'process_id',
+        'price',
+        'quantity',
+        'purchase_at',
         'detail',
+        'image',
+
     ];
 
     /**
@@ -33,4 +39,9 @@ class Item extends Model
      */
     protected $casts = [
     ];
+
+    public function Process(){
+        return $this->belongsTo(Process::class);
+    }
+    
 }

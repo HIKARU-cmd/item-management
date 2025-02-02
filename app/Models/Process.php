@@ -12,4 +12,9 @@ class Process extends Model
         'name',
     ];
 
+    public function items(){
+
+        return $this->hasmany(Item::class);
+    }
+
 }

@@ -39,8 +39,12 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
-                                    <td>{{ $item->type }}</td>
+                                    <td>{{ $item->process->name }}</td>
+                                    <td>{{ $item->price }}</td>
+                                    <td>{{ $item->quantity }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->purchase_at)->format('Y-m-d') }}</td>
                                     <td>{{ $item->detail }}</td>
+                                    <td>{{ $item->image }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -27,18 +27,22 @@
                             <label for="name">品名</label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="名前" required>
                         </div>
+
+
                         <div class="form-group">
                             <label for="process_id">工程名</label>
-                            {{-- <select class="form-control" id="process_id" name="process_id" placeholder="工程名" required>
+                            <select class="form-control" id="process_id" name="process_id" placeholder="工程名" required>
                                 @if($processes->isEmpty())
-                                    <option>登録データがありません</option>
+                                    <option>登録データがありません。登録フォームより登録してください。</option>
                                 @else
+                                    <option value="">選択してください</option>
                                     @foreach($processes as $process)
-                                        <option value="{{ $process->process_id }}">{{ $process->name }}</option>
+                                        <option value="{{ $process->id }}">{{ $process->name }}</option>
                                     @endforeach
                                 @endif
-                            </select> --}}
+                            </select>
                         </div>
+
 
                         <div class="form-group">
                             <label for="price">単価</label>
