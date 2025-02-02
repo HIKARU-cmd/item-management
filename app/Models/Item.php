@@ -40,7 +40,7 @@ class Item extends Model
     protected $casts = [
     ];
 
-    public function Process(){
+    public function process(){
         return $this->belongsTo(Process::class);
     }
     

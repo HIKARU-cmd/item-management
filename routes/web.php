@@ -30,6 +30,9 @@ Route::middleware('auth')->group(function(){
         Route::get('/', [App\Http\Controllers\ItemController::class, 'index']);
         Route::get('/add', [App\Http\Controllers\ItemController::class, 'add']);
         Route::post('/add', [App\Http\Controllers\ItemController::class, 'add']);
+        Route::post('/update', [App\Http\Controllers\ItemController::class, 'update'])->name('update');
+        Route::delete('/itemDelete/{id}', [App\Http\Controllers\ItemController::class, 'itemDelete']);
+        Route::get('/itemEdit/{id}', [App\Http\Controllers\ItemController::class, 'itemEdit']);
     });
 
     Route::prefix('processes')->group(function () {
