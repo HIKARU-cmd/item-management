@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProcessController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,15 +31,24 @@ Route::middleware('auth')->group(function(){
         Route::get('/', [App\Http\Controllers\ItemController::class, 'index']);
         Route::get('/add', [App\Http\Controllers\ItemController::class, 'add']);
         Route::post('/add', [App\Http\Controllers\ItemController::class, 'add']);
-        Route::post('/update', [App\Http\Controllers\ItemController::class, 'update'])->name('update');
-        Route::delete('/itemDelete/{id}', [App\Http\Controllers\ItemController::class, 'itemDelete']);
+        Route::post('/update', [App\Http\Controllers\ItemController::class, 'update'])->name('itemUpdate');
         Route::get('/itemEdit/{id}', [App\Http\Controllers\ItemController::class, 'itemEdit']);
+        Route::get('/itemDelete/{id}', function(){
+            return redirect('/items')->with('error', '不正な操作です');
+        });
+        Route::delete('/itemDelete/{id}', [App\Http\Controllers\ItemController::class, 'itemDelete']);
     });
 
     Route::prefix('processes')->group(function () {
         Route::get('/', [App\Http\Controllers\ProcessController::class, 'index']);
         Route::post('/', [App\Http\Controllers\ProcessController::class, 'add']);
         Route::get('/add', [App\Http\Controllers\ProcessController::class, 'add']);
+        Route::post('/update', [App\Http\Controllers\ProcessController::class, 'update'])->name('processUpdate');
+        Route::get('/processEdit/{id}', [App\Http\Controllers\ProcessController::class, 'processEdit']);
+        Route::get('/processDelete/{id}', function(){
+            return redirect('/processes')->with('error', '不正な操作です');
+        });
+        Route::delete('/processDelete/{id}', [App\Http\Controllers\ProcessController::class, 'processDelete'])->name('processDelete');
     });
     
 });

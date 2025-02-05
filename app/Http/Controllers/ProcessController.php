@@ -20,7 +20,7 @@ class ProcessController extends Controller
         if($request->isMethod('post')){
             // バリデーション
             $request->validate([
-                'name' => 'required'
+                'name' => 'required|max:100'
             ]);
 
             Process::create([
@@ -29,5 +29,53 @@ class ProcessController extends Controller
         }
             return redirect('/processes');
     }
+
+            /**
+     * 工程名一覧編集
+     */
+    public function processEdit(Request $request){
+
+        $process = Process::find($request->id);
+        
+        if ($process === null) {
+            return redirect('/processes')->with('error', '指定されたアイテムが見つかりません。');
+        }
+        return view('process.edit', compact( 'process'));
+    }
+    
+            /**
+     * 工程名一覧更新
+     */
+    public function update(Request $request){
+
+        $this->validate($request,[
+            'id' => 'required|exists:processes,id',
+            'name' => 'required|max:100',
+        ]);
+
+        $process = Process::find($request->id);
+        $process->name = $request->name;
+        $process->save();
+
+        return redirect('/processes');
+    }
+
+
+
+            /**
+     * 工程名、部品一覧削除
+     */
+    public function processDelete(Request $request){
+        $process = Process::find($request->id);
+        
+        if(!$process){
+            return redirect('/processes')->with('error', '見つかりません。');
+        }
+        
+        $process->items()->delete();
+        $process->delete();
+        return redirect('/processes');
+    }
+
 
 }

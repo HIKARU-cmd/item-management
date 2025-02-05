@@ -64,9 +64,13 @@ class ItemController extends Controller
      * 部品一覧編集
      */
     public function itemEdit(Request $request){
+
         $item = Item::find($request->id);
         $processes = Process::all(); 
-
+        
+        if ($item === null) {
+            return redirect('/items')->with('error', '指定されたアイテムが見つかりません。');
+        }
         return view('item.edit', compact('item', 'processes'));
     }
         /**

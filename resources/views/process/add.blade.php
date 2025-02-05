@@ -7,64 +7,84 @@
 @stop
 
 @section('content')
-    <div class="row">
-        <div class="col-md-10">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                       @foreach ($errors->all() as $error)
-                          <li>{{ $error }}</li>
-                       @endforeach
-                    </ul>
-                </div>
-            @endif
-        </div>
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
     </div>
+@endif
+
+<div class="row">
+    <div class="col-md-10">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </div>
+</div>
 
 {{-- 工程名登録フォーム --}}
-    <div class="card card-primary">
-        <form method="POST">
-            @csrf
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="name">工程名登録</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="工程名" required>
-                </div>
-
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">登録</button>
+<div class="card card-primary">
+    <form method="POST">
+        @csrf
+        <div class="card-body">
+            <div class="form-group">
+                <h3><label for="name">工程名登録</label></h3>
+                <input type="text" class="form-control" id="name" name="name" placeholder="工程名" required>
             </div>
-        </form>
-    </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">登録</button>
+        </div>
+    </form>
+</div>
 
 {{-- 工程名一覧表示 --}}
-    <div class="col-12 mt-5" >
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">工程名一覧</h3>
-            </div>
-            <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                    <thead>
+<div class="col-12 mt-5" >
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">工程名一覧</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>工程名</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($processes as $process)
                         <tr>
-                            <th>ID</th>
-                            <th>工程名</th>
-                            <th>操作</th>
+                            <td>{{ $process->id }}</td>
+                            <td>{{ $process->name }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    {{-- 編集ボタン --}}
+                                    <a href="processes/processEdit/{{ $process->id }}"><button type="button" class="btn btn-sm btn-primary mr-2">編集</button></a>
+                                    
+                                    {{-- 削除ボタン --}}
+                                    <form action="{{ route('processDelete', $process->id) }}" id="delete_{{ $process->id }}" method="POST">
+                                        @csrf   
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger mr-2" data-id="{{ $process->id }}" onclick="deletePost(this,event)">削除</button>
+                                    </form>
+                                </div>
+
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($processes as $process)
-                            <tr>
-                                <td>{{ $process->id }}</td>
-                                <td>{{ $process->name }}</td>
-                                <td>編集 削除</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 
 @stop
 
@@ -72,4 +92,17 @@
 @stop
 
 @section('js')
+<script>
+    function deletePost(e){
+        // 削除確認のポップアップ
+        if(!confirm('購入部品一覧に登録しているレコードも削除されますが、本当に削除しますか？')){
+            // キャンセルした場合、削除処理を止める
+            event.preventDefault();
+            return false;
+        }
+        // 確認語削除フォームを送信
+        document.getElementById('delete_' + e.dataset.id).submit()
+    }
+</script>
+
 @stop

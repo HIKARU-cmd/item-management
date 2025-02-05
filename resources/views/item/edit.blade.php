@@ -20,7 +20,7 @@
             @endif
 
             <div class="card card-primary">
-                <form action="{{ route('update') }}" id="edit_{{ $item->id }}" method="POST">
+                <form action="{{ route('itemUpdate') }}" id="edit_{{ $item->id }}" method="POST">
                     @csrf
                     <input type="hidden" name="id" value="{{ $item->id }}">
                     <div class="card-body">
@@ -33,7 +33,7 @@
                             <label for="process_id">工程名</label>
                             <select class="form-control" id="process_id" name="process_id" required>
                                 @foreach($processes as $process)
-                                    <option value="{{ $process->id }}" @if($process->id == $item->process->id) selected @endif>{{ $process->name }}</option>
+                                    <option value="{{ $process->id }}" @if($process->id == $item->process->id) selected @endif>{{ $process->name ?? '未分類' }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -49,7 +49,7 @@
 
                         <div class="form-group">
                             <label for="purchase_at">購入日</label>
-                            <input type="date" class="form-control" value="{{ $item->purchase_at }}" id="purchase_at" name="purchase_at" required>
+                            <input type="date" class="form-control" value="{{ \Carbon\Carbon::parse($item->purchase_at)->format('Y-m-d') }}" id="purchase_at" name="purchase_at" required>
                         </div>
 
                         <div class="form-group">
@@ -78,13 +78,13 @@
 <script>
     function editPost(e){
         // 変更確認のポップアップ
-        if(!confirm('本当に変更しますか？')){
+        if(!confirm('購入部品一覧も変更されますが、本当に変更しますか？')){
             // キャンセルした場合、変更処理を止める
             event.preventDefault();
             return false;
         }
         // 変更後、変更フォームを送信
-        document.getElementById('delete_' + e.dataset.id).submit()
+        document.getElementById('edit_' + e.dataset.id).submit()
     }
 </script>
 
