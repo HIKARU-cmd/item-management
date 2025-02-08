@@ -28,9 +28,10 @@ Route::middleware('auth')->group(function(){
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::prefix('items')->group(function () {
-        Route::get('/', [App\Http\Controllers\ItemController::class, 'index']);
+        Route::get('/', [App\Http\Controllers\ItemController::class, 'index'])->name('item');
         Route::get('/add', [App\Http\Controllers\ItemController::class, 'add']);
         Route::post('/add', [App\Http\Controllers\ItemController::class, 'add']);
+        Route::get('/search', [App\Http\Controllers\ItemController::class, 'itemSearch'])->name('itemSearch');
         Route::post('/update', [App\Http\Controllers\ItemController::class, 'update'])->name('itemUpdate');
         Route::get('/itemEdit/{id}', [App\Http\Controllers\ItemController::class, 'itemEdit']);
         Route::get('/itemDelete/{id}', function(){
@@ -40,9 +41,10 @@ Route::middleware('auth')->group(function(){
     });
 
     Route::prefix('processes')->group(function () {
-        Route::get('/', [App\Http\Controllers\ProcessController::class, 'index']);
+        Route::get('/', [App\Http\Controllers\ProcessController::class, 'index'])->name('process');
         Route::post('/', [App\Http\Controllers\ProcessController::class, 'add']);
         Route::get('/add', [App\Http\Controllers\ProcessController::class, 'add']);
+        Route::get('/search', [App\Http\Controllers\ProcessController::class, 'processSearch'])->name('processSearch');
         Route::post('/update', [App\Http\Controllers\ProcessController::class, 'update'])->name('processUpdate');
         Route::get('/processEdit/{id}', [App\Http\Controllers\ProcessController::class, 'processEdit']);
         Route::get('/processDelete/{id}', function(){

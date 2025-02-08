@@ -116,4 +116,26 @@ class ItemController extends Controller
         $item->delete();
         return redirect('/items');
     }
+
+                    /**
+     * 工程名検索
+     */
+    public function itemSearch(Request $request){
+        $keyword = $request->input('keyword');
+        $query = Item::query();
+        $query->where('name', 'LIKE', "%{$keyword}%")
+            ->orwhere('price', 'LIKE', "%{$keyword}%")
+            ->orwhere('quantity', 'LIKE', "%{$keyword}%")
+            ->orwhere('purchase_at', 'LIKE', "%{$keyword}%")
+            ->orwhere('detail', 'LIKE', "%{$keyword}%")
+            ->orwherehas('process', function($q) use ($keyword){
+                $q->where('name', 'LIKE', "%{$keyword}%");
+            });
+        $items = $query->get();
+        dd($items);
+
+        return view('item/index', compact('keyword', 'items'));
+
+    }
+
 }

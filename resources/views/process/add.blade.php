@@ -29,7 +29,7 @@
 </div>
 
 {{-- 工程名登録フォーム --}}
-<div class="card card-primary">
+<div class="card card-primary" style="font-size: 1.3rem;">
     <form method="POST">
         @csrf
         <div class="card-body">
@@ -44,12 +44,23 @@
     </form>
 </div>
 
+{{-- 工程名検索機能 --}}
+<div class="text-right mt-3" style="font-size: 1.3rem;">
+    <form action="{{ route('processSearch') }}" method="GET">
+        <label for="search">工程名検索</label>
+        <input type="text" id="search" name="keyword" value="{{ $keyword->name ?? '' }}">
+        <input type="submit" value="検索">
+    </form>
+    <a class="btn btn-primary mt-3" style="font-size: 1.3rem;" href="{{route('process')}}" role="button">全工程名表示</a>
+</div>
+
 {{-- 工程名一覧表示 --}}
-<div class="col-12 mt-5" >
+<div class="col-12 mt-5">
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">工程名一覧</h3>
         </div>
+
         <div class="card-body table-responsive p-0">
             <table class="table table-hover text-nowrap">
                 <thead>

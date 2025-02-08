@@ -14,6 +14,17 @@
     </div>
 @endif
 
+{{-- 購入部品検索機能 --}}
+<div class="text-right mt-5 mb-5" style="font-size: 1.3rem;">
+    <form action="{{ route('itemSearch') }}" method="GET">
+        <label for="search">購入部品検索</label>
+        <input type="text" id="search" name="keyword" value="{{ $keyword->name ?? '' }}">
+        <input type="submit" value="検索">
+    </form>
+    <a class="btn btn-primary mt-3" style="font-size: 1.5rem;" href="{{route('item')}}" role="button">全購入部品表示</a>
+</div>
+
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -22,7 +33,7 @@
                 <div class="card-tools">
                     <div class="input-group input-group-sm">
                         <div class="input-group-append">
-                            <a href="{{ url('items/add') }}" class="btn btn-default">購入部品登録</a>
+                            <a href="{{ url('items/add') }}" class="btn btn-default" style="font-size: 1.5rem;">購入部品登録</a>
                         </div>
                     </div>
                 </div>

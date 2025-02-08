@@ -60,8 +60,6 @@ class ProcessController extends Controller
         return redirect('/processes');
     }
 
-
-
             /**
      * 工程名、部品一覧削除
      */
@@ -77,5 +75,18 @@ class ProcessController extends Controller
         return redirect('/processes');
     }
 
+                /**
+     * 工程名検索
+     */
+    public function processSearch(Request $request){
+        $keyword = $request->input('keyword');
+        $query = Process::query();
+
+        $query->where('name', 'LIKE', "%{$keyword}%");
+        $processes = $query->get();
+
+        return view('process/add', compact('keyword', 'processes'));
+
+    }
 
 }
