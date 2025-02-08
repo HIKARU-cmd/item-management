@@ -20,7 +20,7 @@
             @endif
 
             <div class="card card-primary">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="form-group">
@@ -64,7 +64,7 @@
                         </div>
                         <div class="form-group">
                             <label for="image">画像</label>
-                            <input type="text" class="form-control" id="image" name="image" placeholder="画像" >
+                            <input type="file" class="form-control" id="image" name="image" placeholder="画像" >
                         </div>
                     </div>
 

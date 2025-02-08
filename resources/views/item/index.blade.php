@@ -13,6 +13,11 @@
         {{ session('error') }}
     </div>
 @endif
+@if(session('success'))
+    <div class="alert alert-primary">
+        {{ session('success') }}
+    </div>
+@endif
 
 {{-- 購入部品検索機能 --}}
 <div class="text-right mt-5 mb-5" style="font-size: 1.3rem;">
@@ -63,7 +68,14 @@
                                 <td>{{ $item->quantity }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->purchase_at)->format('Y-m-d') }}</td>
                                 <td>{{ $item->detail }}</td>
-                                <td>{{ $item->image }}</td>
+                                <td>
+                                    @if($item->image)
+                                        <a href="{{ asset($item->image) }}" data-lightbox="group" data-title="画像">
+                                            <img src="{{ asset($item->image) }}" alt="画像" width="100">
+                                        </a>
+                                    @else
+                                        <p>画像なし</p>
+                                    @endif
                                 <td>
                                     <div class="d-flex">
                                         {{-- 編集ボタン --}}
@@ -88,19 +100,27 @@
 @stop
 
 @section('css')
+    <!-- Lightbox2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
 @stop
 
 @section('js')
-<script>
-    function deletePost(e){
-        // 削除確認のポップアップ
-        if(!confirm('本当に削除しますか？')){
-            // キャンセルした場合、削除処理を止める
-            event.preventDefault();
-            return false;
+    <!-- jQuery（Lightbox2 は jQuery に依存） -->   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Lightbox2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+    {{-- 削除確認 --}}
+    <script>
+        function deletePost(e){
+            // 削除確認のポップアップ
+            if(!confirm('本当に削除しますか？')){
+                // キャンセルした場合、削除処理を止める
+                event.preventDefault();
+                return false;
+            }
+            // 確認語削除フォームを送信
+            document.getElementById('delete_' + e.dataset.id).submit()
         }
-        // 確認語削除フォームを送信
-        document.getElementById('delete_' + e.dataset.id).submit()
-    }
-</script>
+    </script>
 @stop

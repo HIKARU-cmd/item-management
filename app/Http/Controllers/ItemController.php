@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Process;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
@@ -36,10 +37,20 @@ class ItemController extends Controller
                 'quantity' => 'required|integer|min:1',
                 'purchase_at' => 'required|date|before:tomorrow',
                 'detail' => 'nullable|string|max:500',
-                'image' => 'nullable|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             ]);
 
+            // 購入日を年月日までの表示としている
             $purchaseAtFormatted = Carbon::parse($request->purchase_at)->format('Y-m-d');
+
+            $image_path = null;
+            if($request->hasFile('image')){
+                // ファイルを`storage/app/public/img/` に保存
+                $image_path = $request->file('image')->store('public/img');
+                // DBにはstorage/img/sample.jpgの形で保存
+                $image_path = str_replace('public/', 'storage/', $image_path);
+            }
+
             // 商品登録
             Item::create([
                 'user_id' => Auth::user()->id,
@@ -49,10 +60,10 @@ class ItemController extends Controller
                 'quantity' => $request->quantity,
                 'purchase_at' => $purchaseAtFormatted,
                 'detail' => $request->detail,
-                'image' => $request->image,
+                'image' => $image_path,
             ]);
             
-            return redirect('/items');
+            return redirect('/items')->with('success', '登録されました。');
         }
 
         $processes = Process::all(); 
@@ -85,10 +96,18 @@ class ItemController extends Controller
             'quantity' => 'required|integer|min:1',
             'purchase_at' => 'required|date|before:tomorrow',
             'detail' => 'nullable|string|max:500',
-            'image' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
         
         $purchaseAtFormatted = Carbon::parse($request->purchase_at)->format('Y-m-d');
+
+        $image_path = null;
+        if($request->hasFile('image')){
+            // ファイルを`storage/app/public/img/` に保存
+            $image_path = $request->file('image')->store('public/img');
+            // DBにはstorage/img/sample.jpgの形で保存
+            $image_path = str_replace('public/', 'storage/', $image_path);
+        }
         
         $item = Item::find($request->id);
         $item->name = $request->name;
@@ -97,10 +116,10 @@ class ItemController extends Controller
         $item->quantity = $request->quantity;
         $item->purchase_at = $request->purchase_at;
         $item->detail = $request->detail;
-        $item->image = $request->image;
+        $item->image = $image_path;
         $item->save();
 
-        return redirect('/items');
+        return redirect('/items')->with('success', '編集完了しました。');
     }
 
         /**

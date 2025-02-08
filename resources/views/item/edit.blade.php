@@ -20,7 +20,7 @@
             @endif
 
             <div class="card card-primary">
-                <form action="{{ route('itemUpdate') }}" id="edit_{{ $item->id }}" method="POST">
+                <form action="{{ route('itemUpdate') }}" id="edit_{{ $item->id }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="{{ $item->id }}">
                     <div class="card-body">
@@ -58,7 +58,15 @@
                         </div>
                         <div class="form-group">
                             <label for="image">画像</label>
-                            <input type="text" class="form-control" value="{{ $item->image }}" id="image" name="image">
+                                @if(isset($item->image))
+                                    <div class="d-flex">
+                                        <p class="mr-4 mt-4">現在の画像</p>
+                                        <a href="{{ asset($item->image) }}" data-lightbox="group" data-title="画像" class="mb-3">
+                                            <img src="{{ asset($item->image) }}" alt="画像" width="100">
+                                        </a>
+                                    </div>
+                                @endif
+                            <input type="file" class="form-control" id="image" name="image" value="{{ $item->image ?? ''}}">
                         </div>
                     </div>
 
@@ -72,20 +80,27 @@
 @stop
 
 @section('css')
+    <!-- Lightbox2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
 @stop
 
 @section('js')
-<script>
-    function editPost(e){
-        // 変更確認のポップアップ
-        if(!confirm('購入部品一覧も変更されますが、本当に変更しますか？')){
-            // キャンセルした場合、変更処理を止める
-            event.preventDefault();
-            return false;
-        }
-        // 変更後、変更フォームを送信
-        document.getElementById('edit_' + e.dataset.id).submit()
-    }
-</script>
+    <!-- jQuery（Lightbox2 は jQuery に依存） -->   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Lightbox2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 
+    <script>
+        // 変更確認
+        function editPost(e){
+            // 変更確認のポップアップ
+            if(!confirm('本当に変更しますか？')){
+                // キャンセルした場合、変更処理を止める
+                event.preventDefault();
+                return false;
+            }
+            // 変更後、変更フォームを送信
+            document.getElementById('edit_' + e.dataset.id).submit()
+        }
+    </script>
 @stop
