@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProcessController;
+use App\Http\Controllers\ImportController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -38,8 +39,11 @@ Route::middleware('auth')->group(function(){
             return redirect('/items')->with('error', '不正な操作です');
         });
         Route::delete('/itemDelete/{id}', [App\Http\Controllers\ItemController::class, 'itemDelete']);
+        
     });
 
+    Route::post('/csvImport', [App\Http\Controllers\ImportController::class, 'csvImport'])->name('csvImport');
+    
     Route::prefix('processes')->group(function () {
         Route::get('/', [App\Http\Controllers\ProcessController::class, 'index'])->name('process');
         Route::post('/', [App\Http\Controllers\ProcessController::class, 'add']);

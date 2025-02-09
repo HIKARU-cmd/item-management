@@ -13,11 +13,23 @@
         {{ session('error') }}
     </div>
 @endif
+
 @if(session('success'))
     <div class="alert alert-primary">
         {{ session('success') }}
     </div>
 @endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 
 {{-- 購入部品検索機能 --}}
 <div class="text-right mt-5 mb-5" style="font-size: 1.3rem;">
@@ -64,7 +76,7 @@
                                 <td>{{ $item->id }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->process->name ?? '未分類'}}</td>
-                                <td>{{ $item->price }}</td>
+                                <td>{{ $item->price }} 円</td>
                                 <td>{{ $item->quantity }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->purchase_at)->format('Y-m-d') }}</td>
                                 <td>{{ $item->detail }}</td>

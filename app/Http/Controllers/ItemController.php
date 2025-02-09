@@ -151,7 +151,6 @@ class ItemController extends Controller
                 $q->where('name', 'LIKE', "%{$keyword}%");
             });
         $items = $query->get();
-        dd($items);
 
         return view('item/index', compact('keyword', 'items'));
 
