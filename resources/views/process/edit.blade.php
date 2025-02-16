@@ -7,17 +7,17 @@
 @stop
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <div class="row">
         <div class="col-md-10">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
             <div class="card card-primary">
                 <form action="{{ route('processUpdate') }}" id="edit_{{ $process->id }}" method="POST">
@@ -29,7 +29,7 @@
                             <input type="text" class="form-control" value="{{ $process->name }}" id="name" name="name" required>
                         </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary" data-id="{{ $process->id }}" onclick="editPost(this,event)">変更する</button>
+                        <button type="button" class="btn btn-primary" data-id="{{ $process->id }}" onclick="editPost(event, this)">変更する</button>
                     </div>
                 </form>
             </div>
@@ -42,7 +42,7 @@
 
 @section('js')
 <script>
-    function editPost(e){
+    function editPost(event, button){
         // 変更確認のポップアップ
         if(!confirm('購入部品一覧も変更されますが、本当に変更しますか？')){
             // キャンセルした場合、変更処理を止める
@@ -50,7 +50,7 @@
             return false;
         }
         // 変更後、変更フォームを送信
-        document.getElementById('edit_' + e.dataset.id).submit()
+        document.getElementById('edit_' + button.dataset.id).submit()
     }
 </script>
 

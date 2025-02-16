@@ -26,8 +26,9 @@ class ProcessController extends Controller
             Process::create([
                 'name' => $request->name,
             ]);
+            return redirect('/processes')->with('success', '登録されました。');
         }
-            return redirect('/processes');
+        return redirect('/processes');
     }
 
             /**
@@ -57,7 +58,7 @@ class ProcessController extends Controller
         $process->name = $request->name;
         $process->save();
 
-        return redirect('/processes');
+        return redirect('/processes')->with('success', '編集が成功しました。');
     }
 
             /**
@@ -72,7 +73,7 @@ class ProcessController extends Controller
         
         $process->items()->delete();
         $process->delete();
-        return redirect('/processes');
+        return redirect('/processes')->with('success', '削除が成功しました。');
     }
 
                 /**

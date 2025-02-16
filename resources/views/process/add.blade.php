@@ -14,6 +14,22 @@
     </div>
 @endif
 
+@if(session('success'))
+    <div class="alert alert-primary">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="row">
     <div class="col-md-10">
         @if ($errors->any())
@@ -76,18 +92,17 @@
                             <td>{{ $process->id }}</td>
                             <td>{{ $process->name }}</td>
                             <td>
-                                <div class="d-flex">
+                                <div class="d-flex justify-content-center">
                                     {{-- 編集ボタン --}}
-                                    <a href="processes/processEdit/{{ $process->id }}"><button type="button" class="btn btn-sm btn-primary mr-2">編集</button></a>
+                                    <a href="{{ route('processEdit', $process->id) }}"><button type="button" class="btn btn-sm btn-primary mr-2">編集</button></a>
                                     
                                     {{-- 削除ボタン --}}
                                     <form action="{{ route('processDelete', $process->id) }}" id="delete_{{ $process->id }}" method="POST">
                                         @csrf   
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger mr-2" data-id="{{ $process->id }}" onclick="deletePost(this,event)">削除</button>
+                                        <button type="button" class="btn btn-sm btn-danger mr-2" data-id="{{ $process->id }}" onclick="deletePost(event, this)">削除</button>
                                     </form>
                                 </div>
-
                             </td>
                         </tr>
                     @endforeach
@@ -100,11 +115,18 @@
 @stop
 
 @section('css')
+<style>
+    .table td, .table th {
+        text-align: center; /* 水平方向の中央揃え */
+        vertical-align: middle; /* 垂直方向の中央揃え */
+    }
+</style>
+
 @stop
 
 @section('js')
 <script>
-    function deletePost(e){
+    function deletePost(event, button){
         // 削除確認のポップアップ
         if(!confirm('購入部品一覧に登録しているレコードも削除されますが、本当に削除しますか？')){
             // キャンセルした場合、削除処理を止める
@@ -112,7 +134,7 @@
             return false;
         }
         // 確認語削除フォームを送信
-        document.getElementById('delete_' + e.dataset.id).submit()
+        document.getElementById('delete_' + button.dataset.id).submit()
     }
 </script>
 

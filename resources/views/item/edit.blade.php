@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary" data-id="{{ $item->id }}" onclick="editPost(this,event)">変更する</button>
+                    <button type="button" class="btn btn-primary" data-id="{{ $item->id }}" onclick="editPost(event, this)">変更する</button>
                 </div>
             </form>
         </div>
@@ -99,22 +99,22 @@
 @stop
 
 @section('js')
-    <!-- jQuery（Lightbox2 は jQuery に依存） -->   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Lightbox2 JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<!-- jQuery（Lightbox2 は jQuery に依存） -->   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Lightbox2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 
-    <script>
-        // 変更確認
-        function editPost(e){
-            // 変更確認のポップアップ
-            if(!confirm('本当に変更しますか？')){
-                // キャンセルした場合、変更処理を止める
-                event.preventDefault();
-                return false;
-            }
-            // 変更後、変更フォームを送信
-            document.getElementById('edit_' + e.dataset.id).submit()
+<script>
+    // 変更確認
+    function editPost(event, button){
+        // 変更確認のポップアップ
+        if(!confirm('本当に変更しますか？')){
+            // キャンセルした場合、変更処理を止める
+            event.preventDefault();
+            return false;
         }
-    </script>
+        // 変更後、変更フォームを送信
+        document.getElementById('edit_' + button.dataset.id).submit()
+    }
+</script>
 @stop

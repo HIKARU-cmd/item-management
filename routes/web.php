@@ -39,7 +39,10 @@ Route::middleware('auth')->group(function(){
             return redirect('/items')->with('error', '不正な操作です');
         });
         Route::delete('/itemDelete/{id}', [App\Http\Controllers\ItemController::class, 'itemDelete']);
-        
+        Route::get('/bulkDelete', function(){
+            return redirect('/items')->with('error', '不正な操作です');
+        });
+        Route::delete('/bulkDelete', [App\Http\Controllers\ItemController::class, 'bulkDelete'])->name('bulkDelete');
     });
 
     Route::post('/csvImport', [App\Http\Controllers\ImportController::class, 'csvImport'])->name('csvImport');
@@ -50,7 +53,7 @@ Route::middleware('auth')->group(function(){
         Route::get('/add', [App\Http\Controllers\ProcessController::class, 'add']);
         Route::get('/search', [App\Http\Controllers\ProcessController::class, 'processSearch'])->name('processSearch');
         Route::post('/update', [App\Http\Controllers\ProcessController::class, 'update'])->name('processUpdate');
-        Route::get('/processEdit/{id}', [App\Http\Controllers\ProcessController::class, 'processEdit']);
+        Route::get('/processEdit/{id}', [App\Http\Controllers\ProcessController::class, 'processEdit'])->name('processEdit');
         Route::get('/processDelete/{id}', function(){
             return redirect('/processes')->with('error', '不正な操作です');
         });

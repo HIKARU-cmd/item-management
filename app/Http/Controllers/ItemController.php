@@ -71,7 +71,7 @@ class ItemController extends Controller
     
     }
 
-        /**
+    /**
      * 部品一覧編集
      */
     public function itemEdit(Request $request){
@@ -84,7 +84,7 @@ class ItemController extends Controller
         }
         return view('item.edit', compact('item', 'processes'));
     }
-        /**
+    /**
      * 部品一覧更新
      */
     public function update(Request $request){
@@ -119,10 +119,10 @@ class ItemController extends Controller
         $item->image = $image_path;
         $item->save();
 
-        return redirect('/items')->with('success', '編集完了しました。');
+        return redirect('/items')->with('success', '編集が成功しました。');
     }
 
-        /**
+    /**
      * 部品一覧削除
      */
     public function itemDelete(Request $request){
@@ -136,7 +136,27 @@ class ItemController extends Controller
         return redirect('/items');
     }
 
-                    /**
+    /**
+     * 一括削除
+     */
+    public function bulkDelete(Request $request){
+        // 選択されたIDの取得(配列で取得)
+        $ids = $request->input('ids');
+        // チェックボックスが選択されていない場合の処理
+        if($ids === null){
+            return redirect('/items')->with('error', '削除選択されていません。');
+        }
+
+        foreach($ids as $id){
+            $this->itemDelete(new Request(['id' => $id]));
+        }
+
+        return redirect('/items')->with('success', '削除が成功しました。');
+
+    }
+
+
+    /**
      * 工程名検索
      */
     public function itemSearch(Request $request){
