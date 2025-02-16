@@ -30,15 +30,20 @@
     </div>
 @endif
 
-
-{{-- 購入部品検索機能 --}}
-<div class="text-right mt-5 mb-5" style="font-size: 1.3rem;">
-    <form action="{{ route('itemSearch') }}" method="GET">
-        <label for="search">購入部品検索</label>
-        <input type="text" id="search" name="keyword" value="{{ $keyword->name ?? '' }}">
-        <input type="submit" value="検索">
-    </form>
-    <a class="btn btn-primary mt-3" style="font-size: 1.5rem;" href="{{route('item')}}" role="button">購入部品を全て表示する</a>
+<div class="d-flex align-items-center justify-content-between my-4">
+    {{-- csvエクスポート --}}
+    <div class="ml-4">
+        <a href="{{ route('csvExport') }}" class="btn btn-primary" style="font-size: 1.3rem;">csvエクスポート</a>
+    </div>
+    {{-- 購入部品検索機能 --}}
+    <div class="mr-4" style="font-size: 1.3rem;">
+        <form action="{{ route('itemSearch') }}" method="GET">
+            <label for="search">購入部品検索</label>
+            <input type="text" id="search" name="keyword" value="{{ $keyword->name ?? '' }}">
+            <input type="submit" value="検索">
+        </form>
+        <a class="btn btn-primary mt-3 " style="font-size: 1.3rem;" href="{{route('item')}}" role="button">購入部品を全て表示する</a>
+    </div>
 </div>
 
 {{-- 登録部品一覧表示 --}}

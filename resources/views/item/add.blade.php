@@ -29,18 +29,21 @@
     </div>
 @endif
 
+{{-- CSVファイルインポート --}}
+<form action="{{ route('csvImport') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="card-body">
+        <div class="form-group">
+            <label for="csvFile">csvファイル選択</label>
+            <input type="file" id="csvFile" name="csvFile" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">インポート</button>
+    </div>
+</form>
+
+{{-- 購入部品登録 --}}
 <div class="row">
     <div class="col-md-10">
-        <form action="{{ route('csvImport') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="csvFike">csvファイル選択</label>
-                    <input type="file" id="csvFile" name="csvFile" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-primary">インポート</button>
-            </div>
-        </form>
 
         <div class="card card-primary">
             <form method="POST" enctype="multipart/form-data">

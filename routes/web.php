@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -46,6 +47,8 @@ Route::middleware('auth')->group(function(){
     });
 
     Route::post('/csvImport', [App\Http\Controllers\ImportController::class, 'csvImport'])->name('csvImport');
+
+    Route::get('/csvExport', [App\Http\Controllers\ExportController::class, 'csvExport'])->name('csvExport');
     
     Route::prefix('processes')->group(function () {
         Route::get('/', [App\Http\Controllers\ProcessController::class, 'index'])->name('process');
