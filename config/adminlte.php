@@ -305,6 +305,11 @@ return [
             'url'  => 'processes/add',
             'icon' => 'fas fa-gamepad',
         ],
+        [
+            'text' => '購入費用データ',
+            'url'  => 'chart',
+            'icon' => 'fas fa-gamepad',
+        ],
 
         // AdminLTEデフォルト
         /*

@@ -5,6 +5,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ChartController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -27,8 +28,8 @@ Auth::routes();
 // ログイン必須のルーティング
 Route::middleware('auth')->group(function(){
 
-    Route::get('/', [App\Http\Controllers\chartController::class, 'index']);
-
+    Route::get('/', [App\Http\Controllers\ItemController::class, 'index']);
+    
     Route::prefix('items')->group(function () {
         Route::get('/', [App\Http\Controllers\ItemController::class, 'index'])->name('item');
         Route::get('/add', [App\Http\Controllers\ItemController::class, 'add']);
@@ -45,7 +46,7 @@ Route::middleware('auth')->group(function(){
         });
         Route::delete('/bulkDelete', [App\Http\Controllers\ItemController::class, 'bulkDelete'])->name('bulkDelete');
     });
-
+    
     
     Route::prefix('processes')->group(function () {
         Route::get('/', [App\Http\Controllers\ProcessController::class, 'index'])->name('process');
@@ -59,11 +60,12 @@ Route::middleware('auth')->group(function(){
         });
         Route::delete('/processDelete/{id}', [App\Http\Controllers\ProcessController::class, 'processDelete'])->name('processDelete');
     });
-
+    
     Route::post('/csvImport', [App\Http\Controllers\ImportController::class, 'csvImport'])->name('csvImport');
-
+    
     Route::get('/csvExport', [App\Http\Controllers\ExportController::class, 'csvExport'])->name('csvExport');
-
+    
+    Route::get('/chart', [App\Http\Controllers\ChartController::class, 'index']);
 
 });
 
