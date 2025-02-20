@@ -34,7 +34,7 @@
                 const exists = @json($exists);
                 if(!exists){
                     alert('選択した年のデータはありません。');
-                    window.location.href = "/";
+                    window.location.href = "/chart";
                 }
 
                  // 前のグラフがある場合は削除
@@ -95,7 +95,7 @@
 
             document.getElementById("year-select").addEventListener("change", function(){
                 const selectedYear = this.value;
-                window.location.href = `/?year=${selectedYear}`;
+                window.location.href = `/chart?year=${selectedYear}`;
             });
 
             // 受け取ったデータをJSON形式にする
