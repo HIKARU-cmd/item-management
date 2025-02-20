@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 100)->index();
             $table->unsignedInteger('price');
             $table->unsignedInteger('quantity');
-            $table->dateTime('purchase_at');
+            $table->date('purchase_at');
             $table->string('detail', 500)->nullable();
             $table->string('image')->nullable();
             $table->timestamps();

@@ -67,7 +67,7 @@
         <input type="text" id="search" name="keyword" value="{{ $keyword->name ?? '' }}">
         <input type="submit" value="検索">
     </form>
-    <a class="btn btn-primary mt-3" style="font-size: 1.3rem;" href="{{route('process')}}" role="button">全工程名表示</a>
+    <a class="btn btn-success mt-3" style="font-size: 1.3rem;" href="{{route('process')}}" role="button">工程名を全て表示</a>
 </div>
 
 {{-- 工程名一覧表示 --}}
@@ -100,7 +100,7 @@
                                     <form action="{{ route('processDelete', $process->id) }}" id="delete_{{ $process->id }}" method="POST">
                                         @csrf   
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-sm btn-danger mr-2" data-id="{{ $process->id }}" onclick="deletePost(event, this)">削除</button>
+                                        <button type="button" class="btn btn-sm btn-danger mr-2" data-id="{{ $process->id }}" onclick="deletePost(this)">削除</button>
                                     </form>
                                 </div>
                             </td>
@@ -126,11 +126,10 @@
 
 @section('js')
 <script>
-    function deletePost(event, button){
+    function deletePost(button){
         // 削除確認のポップアップ
         if(!confirm('購入部品一覧に登録しているレコードも削除されますが、本当に削除しますか？')){
             // キャンセルした場合、削除処理を止める
-            event.preventDefault();
             return false;
         }
         // 確認語削除フォームを送信

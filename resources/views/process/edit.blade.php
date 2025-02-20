@@ -29,7 +29,7 @@
                             <input type="text" class="form-control" value="{{ $process->name }}" id="name" name="name" required>
                         </div>
                     <div class="card-footer">
-                        <button type="button" class="btn btn-primary" data-id="{{ $process->id }}" onclick="editPost(event, this)">変更する</button>
+                        <button type="button" class="btn btn-primary" data-id="{{ $process->id }}" onclick="editPost(this)">変更する</button>
                     </div>
                 </form>
             </div>
@@ -42,11 +42,10 @@
 
 @section('js')
 <script>
-    function editPost(event, button){
+    function editPost(button){
         // 変更確認のポップアップ
         if(!confirm('購入部品一覧も変更されますが、本当に変更しますか？')){
             // キャンセルした場合、変更処理を止める
-            event.preventDefault();
             return false;
         }
         // 変更後、変更フォームを送信

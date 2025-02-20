@@ -30,14 +30,14 @@
 @endif
 
 {{-- CSVファイルインポート --}}
-<form action="{{ route('csvImport') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('csvImport') }}" method="POST" id="import" enctype="multipart/form-data">
     @csrf
     <div class="card-body">
         <div class="form-group">
-            <label for="csvFile">csvファイル選択</label>
+            <label for="csvFile">CSVファイル選択</label>
             <input type="file" id="csvFile" name="csvFile" class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary">インポート</button>
+        <button type="button" class="btn btn-success" data-id="import" onclick="registerPost(this)">CSVインポート</button>
     </div>
 </form>
 
@@ -46,7 +46,7 @@
     <div class="col-md-10">
 
         <div class="card card-primary">
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" id="register" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="form-group">
@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">登録</button>
+                    <button type="button" class="btn btn-primary" data-id="register" onclick="registerPost(this)">登録</button>
                 </div>
             </form>
         </div>
@@ -107,4 +107,23 @@
 @stop
 
 @section('js')
+<script>
+    // 登録確認
+    function registerPost(button){
+        // 変更確認のポップアップ
+        if(!confirm('登録しますか？')){
+            // キャンセルした場合、変更処理を止める
+            return false;
+        }
+        let formId = button.getAttribute('data-id');
+        let form = document.getElementById(formId);
+
+        // 変更後、変更フォームを送信
+        if(form){
+            form.submit();
+        } else {
+            alert('エラー:フォームが見つかりません。');
+        }
+    }
+</script>
 @stop

@@ -33,7 +33,7 @@
 <div class="d-flex align-items-center justify-content-between my-4">
     {{-- csvエクスポート --}}
     <div class="ml-4">
-        <a href="{{ route('csvExport') }}" class="btn btn-primary" style="font-size: 1.3rem;">csvエクスポート</a>
+        <a href="{{ route('csvExport') }}" class="btn btn-success" style="font-size: 1.3rem;">csvエクスポート</a>
     </div>
     {{-- 購入部品検索機能 --}}
     <div class="mr-4" style="font-size: 1.3rem;">
@@ -42,7 +42,7 @@
             <input type="text" id="search" name="keyword" value="{{ $keyword->name ?? '' }}">
             <input type="submit" value="検索">
         </form>
-        <a class="btn btn-primary mt-3 " style="font-size: 1.3rem;" href="{{route('item')}}" role="button">購入部品を全て表示する</a>
+        <a class="btn btn-success mt-3 " style="font-size: 1.3rem;" href="{{route('item')}}" role="button">購入部品を全て表示する</a>
     </div>
 </div>
 
@@ -55,7 +55,7 @@
                 <div class="card-tools">
                     <div class="input-group input-group-sm">
                         <div class="input-group-append">
-                            <a href="{{ url('items/add') }}" class="btn btn-primary" style="font-size: 1.5rem;">購入部品登録</a>
+                            <a href="{{ url('items/add') }}" class="btn btn-secondary" style="font-size: 1.5rem;">購入部品登録</a>
                         </div>
                     </div>
                 </div>
