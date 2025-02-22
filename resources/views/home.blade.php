@@ -3,11 +3,11 @@
 @section('title', '月毎の購入費用データ')
 
 @section('content_header')
-    <h1>月毎の購入費用データ</h1>
+    <h4>月毎の購入費用データ</h4>
 @stop
 
 @section('content')
-    <div style="width: 70%; height: 500px; margin: 0 auto;">
+    <div style="width: 100%; height: 100vh; margin:0;">
 
         {{-- 年を選択するプルダウン --}}
         <label for="year-select">年を選択</label>
@@ -16,8 +16,19 @@
                 <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>{{ $year }}</option>
             @endforeach
         </select>
+        <div class="container mt-5" style="padding: 0;">
+            <div class="row">
+                <!-- 1つ目のグラフ -->
+                <div class="col-md-6">
+                    <canvas id="itemsChart" style="width: 100%; height: 100%;"></canvas>
+                </div>
         
-        <canvas id="itemsChart"></canvas>
+                <!-- 2つ目のグラフ -->
+                <div class="col-md-6">
+                    <canvas id="processChart" style="width: 100%; height: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function(){   
@@ -59,6 +70,7 @@
                     options: {
                         // 画面サイズによってグラフサイズを自動調整
                         responsive: true,
+                        maintainAspectRatio: false, 
                         plugins: {
                             legend: {
                                 labels: {
@@ -72,7 +84,7 @@
                                                     title: {
                                                         display: true,
                                                         text: '金額(円)',
-                                                        font: {size: 20}
+                                                        font: {size: 16}
                                                     },
                                                     ticks: {
                                                         font: {size: 16}
@@ -82,7 +94,72 @@
                                                 title: {
                                                     display: true,
                                                     text: '購入月',
-                                                    font: {size: 20}
+                                                    font: {size: 16}
+                                                },
+                                                ticks: {
+                                                    font: {size: 16}
+                                                }
+                                            }
+                                        }
+                            }
+                });
+            }
+
+            const processCtx = document.getElementById("processChart").getContext("2d");
+            let processChartInstance = null;
+            
+            function updateProcessChart(data)
+            {
+                // 年月と購入データを配列に変換
+                const labels = data.map(item => item.process);
+                const items = data.map(item => item.total);
+
+                // 前のグラフがある場合は削除
+                if (processChartInstance) {
+                    processChartInstance.destroy();
+                }
+
+                // new Chart Chart.jsのグラフ作成
+                processChartInstance = new Chart(processCtx, 
+                {
+                    type: 'bar',
+                    data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '工程別購入費(円)',
+                                data: items,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                    options: {
+                        responsive: true, // 画面サイズによってグラフサイズを自動調整
+                        maintainAspectRatio: false, // グラフ縦横比固定を解除
+                        plugins: {
+                            legend: {
+                                labels: {
+                                            font:{size:20}
+                                        }
+                                    }
+                                },
+                                scales: {
+                                            y: {
+                                                    beginAtZero: true,
+                                                    title: {
+                                                        display: true,
+                                                        text: '金額(円)',
+                                                        font: {size: 16}
+                                                    },
+                                                    ticks: {
+                                                        font: {size: 16}
+                                                    }
+                                                },
+                                            x: {
+                                                title: {
+                                                    display: true,
+                                                    text: '工程名',
+                                                    font: {size: 16}
                                                 },
                                                 ticks: {
                                                     font: {size: 16}
@@ -101,6 +178,9 @@
             // 受け取ったデータをJSON形式にする
             const data = @json($monthlyData);
             updateChart(data);
+
+            const processData = @json($processChartData);
+            updateProcessChart(processData);
         });
     </script>
 @stop

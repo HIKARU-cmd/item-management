@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Process;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
@@ -23,11 +24,11 @@ class ChartController extends Controller
 
         // 選択された年の購入データを取得
         $rawData = Item::selectRaw("DATE_FORMAT(purchase_at, '%Y-%m') as month, COALESCE(SUM(quantity * price), 0) as total")
-        ->whereYear('purchase_at', $selectedYear)
-        ->groupBy('month')
-        ->orderBy('month')
-        ->pluck('total', 'month'); // ['YYYY-MM' => total] の配列として取得
-
+            ->whereYear('purchase_at', $selectedYear)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month'); // ['YYYY-MM' => total] の配列として取得
+        
         foreach($rawData as $month => $total){
             $months[$month] = $total;
         }
@@ -38,11 +39,24 @@ class ChartController extends Controller
         }
         
         $years = Item::selectRaw("YEAR(purchase_at) as year")
-        ->distinct() // 重複を排除
-        ->orderBy('year', 'desc')
-        ->pluck('year'); // 配列として返す
+            ->distinct() // 重複を排除
+            ->orderBy('year', 'desc')
+            ->pluck('year'); // 配列として返す
+
+        // 工程別グラフのデータ取得
+        $processData = Item::selectRaw('process_id, COALESCE(SUM(quantity * price), 0) as total')
+            ->join('processes', 'items.process_id', '=', 'processes.id')
+            ->whereYear('purchase_at', $selectedYear)
+            ->groupBy('process_id')
+            ->orderBy('total', 'desc')
+            ->pluck('total', 'process_id'); 
+
+        $processes = Process::whereIn('id', $processData->keys())->get()->pluck('name', 'id');
+        $processChartData = $processData->map(function($total, $process_id) use ($processes) {
+            return ['process' => $processes[$process_id], 'total' => $total];
+        })->values();
         
-        return view('home',compact('selectedYear', 'monthlyData', 'years', 'exists'));
+        return view('home',compact('selectedYear', 'monthlyData', 'years', 'exists', 'processChartData'));
 
     }
     
