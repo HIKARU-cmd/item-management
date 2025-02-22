@@ -13,9 +13,14 @@ class ChartController extends Controller
 
         // 選択された年を取得(デフォルトでは今年を取得)
         $selectedYear = $request->input('year', Carbon::now()->year);
+        $selectedMonth = $request->input('month', Carbon::now()->month);
 
         // 選択or入力された年がBDの存在するか確認
         $exists = Item::whereYear('purchase_at', $selectedYear)->exists();
+
+        if($selectedMonth < 1 || $selectedMonth > 12) {
+            return redirect('/chart');
+        }
 
         $months = [];
         for($i=1; $i<=12; $i++){
@@ -47,6 +52,7 @@ class ChartController extends Controller
         $processData = Item::selectRaw('process_id, COALESCE(SUM(quantity * price), 0) as total')
             ->join('processes', 'items.process_id', '=', 'processes.id')
             ->whereYear('purchase_at', $selectedYear)
+            ->whereMonth('purchase_at', $selectedMonth)
             ->groupBy('process_id')
             ->orderBy('total', 'desc')
             ->pluck('total', 'process_id'); 
@@ -56,7 +62,7 @@ class ChartController extends Controller
             return ['process' => $processes[$process_id], 'total' => $total];
         })->values();
         
-        return view('home',compact('selectedYear', 'monthlyData', 'years', 'exists', 'processChartData'));
+        return view('home',compact('selectedYear', 'selectedMonth', 'monthlyData', 'years', 'exists', 'processChartData'));
 
     }
     

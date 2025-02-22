@@ -10,12 +10,30 @@
     <div style="width: 100%; height: 100vh; margin:0;">
 
         {{-- 年を選択するプルダウン --}}
-        <label for="year-select">年を選択</label>
-        <select name="" id="year-select">
+        <label for="yearSelect">年を選択</label>
+        <select name="" id="yearSelect">
             @foreach ($years as $year)
                 <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>{{ $year }}</option>
             @endforeach
         </select>
+
+        {{-- 月を選択するプルダウン --}}
+        <label for="monthSelect">月を選択</label>
+        <select name="" id="monthSelect">
+            <option value="01" {{ '01' == $selectedMonth ? 'selected' : '' }}>01月</option>
+            <option value="02" {{ '02' == $selectedMonth ? 'selected' : '' }}>02月</option>
+            <option value="03" {{ '03' == $selectedMonth ? 'selected' : '' }}>03月</option>
+            <option value="04" {{ '04' == $selectedMonth ? 'selected' : '' }}>04月</option>
+            <option value="05" {{ '05' == $selectedMonth ? 'selected' : '' }}>05月</option>
+            <option value="06" {{ '06' == $selectedMonth ? 'selected' : '' }}>06月</option>
+            <option value="07" {{ '07' == $selectedMonth ? 'selected' : '' }}>07月</option>
+            <option value="08" {{ '08' == $selectedMonth ? 'selected' : '' }}>08月</option>
+            <option value="09" {{ '09' == $selectedMonth ? 'selected' : '' }}>09月</option>
+            <option value="10" {{ '10' == $selectedMonth ? 'selected' : '' }}>10月</option>
+            <option value="11" {{ '11' == $selectedMonth ? 'selected' : '' }}>11月</option>
+            <option value="12" {{ '12' == $selectedMonth ? 'selected' : '' }}>12月</option>
+        </select>
+
         <div class="container mt-5" style="padding: 0;">
             <div class="row">
                 <!-- 1つ目のグラフ -->
@@ -119,6 +137,8 @@
                     processChartInstance.destroy();
                 }
 
+                const yearMonth = `${selectedYear}-${selectedMonth}`;
+
                 // new Chart Chart.jsのグラフ作成
                 processChartInstance = new Chart(processCtx, 
                 {
@@ -126,7 +146,7 @@
                     data: {
                             labels: labels,
                             datasets: [{
-                                label: '工程別購入費(円)',
+                                label: `${yearMonth}   工程別購入費(円)`,
                                 data: items,
                                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                                 borderColor: 'rgba(54, 162, 235, 1)',
@@ -170,17 +190,24 @@
                 });
             }
 
-            document.getElementById("year-select").addEventListener("change", function(){
-                const selectedYear = this.value;
-                window.location.href = `/chart?year=${selectedYear}`;
-            });
+            function updateUrl(){
+                const selectedYear = yearSelect.value;
+                const selectedMonth = monthSelect.value;
+                window.location.href = `/chart?year=${selectedYear}&month=${selectedMonth}`;
+            }
+
+            document.getElementById('yearSelect').addEventListener('change', updateUrl);
+            document.getElementById('monthSelect').addEventListener('change', updateUrl);
+
 
             // 受け取ったデータをJSON形式にする
             const data = @json($monthlyData);
             updateChart(data);
 
             const processData = @json($processChartData);
-            updateProcessChart(processData);
+            const selectedYear = yearSelect.value;
+            const selectedMonth = monthSelect.value;
+            updateProcessChart(processData, selectedYear, selectedMonth);
         });
     </script>
 @stop
