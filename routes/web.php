@@ -29,6 +29,7 @@ Auth::routes();
 Route::middleware('auth')->group(function(){
 
     Route::get('/', [App\Http\Controllers\ItemController::class, 'index']);
+    Route::get('/home', [App\Http\Controllers\ItemController::class, 'index']);
     
     Route::prefix('items')->group(function () {
         Route::get('/', [App\Http\Controllers\ItemController::class, 'index'])->name('item');
@@ -47,7 +48,6 @@ Route::middleware('auth')->group(function(){
         Route::delete('/bulkDelete', [App\Http\Controllers\ItemController::class, 'bulkDelete'])->name('bulkDelete');
     });
     
-    
     Route::prefix('processes')->group(function () {
         Route::get('/', [App\Http\Controllers\ProcessController::class, 'index'])->name('process');
         Route::post('/', [App\Http\Controllers\ProcessController::class, 'add']);
@@ -62,9 +62,7 @@ Route::middleware('auth')->group(function(){
     });
     
     Route::post('/csvImport', [App\Http\Controllers\ImportController::class, 'csvImport'])->name('csvImport');
-    
     Route::get('/csvExport', [App\Http\Controllers\ExportController::class, 'csvExport'])->name('csvExport');
-    
     Route::get('/chart', [App\Http\Controllers\ChartController::class, 'index']);
 
 });

@@ -94,7 +94,7 @@
                             <td>{{ $item->detail }}</td>
                             <td>
                                 @if($item->image)
-                                <a href="{{ asset($item->image) }}" data-lightbox="group" data-title="画像">
+                                <a href="{{ asset($item->image) }}" data-lightbox="group" data-title="{{ $item->name }}">
                                     <img src="{{ asset($item->image) }}" alt="画像" width="100">
                                 </a>
                                 @else

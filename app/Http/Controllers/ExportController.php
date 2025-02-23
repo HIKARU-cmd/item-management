@@ -22,7 +22,7 @@ class ExportController extends Controller
             fputcsv($handle, ["name", "process_id","process_name", "price", "quantity", "purchase_at", "detail", "image"]);
             
             // データ取得
-            $items = Item::all();
+            $items = Item::where('user_id', auth()->id())->get();
             
             foreach($items as $item){
                 fputcsv($handle, [

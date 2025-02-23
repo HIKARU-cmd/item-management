@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Process;
+use Illuminate\Support\Facades\Auth;
 
 class ProcessController extends Controller
 {
     //  工程名一覧
     public function index(){
+
         // 工程名一覧を取得
-        $processes = Process::all();
+        $userId = auth()->id();
+        $processes = Process::where('user_id', $userId)->get();
         return view('process/add', compact('processes'));
     }
 
@@ -24,6 +27,7 @@ class ProcessController extends Controller
             ]);
 
             Process::create([
+                'user_id' => Auth::user()->id,
                 'name' => $request->name,
             ]);
             return redirect('/processes')->with('success', '登録されました。');
@@ -81,9 +85,11 @@ class ProcessController extends Controller
      */
     public function processSearch(Request $request){
         $keyword = $request->input('keyword');
-        $query = Process::query();
 
-        $query->where('name', 'LIKE', "%{$keyword}%");
+        $query = Process::where('user_id', auth()->id())
+            ->where('name', 'LIKE', "%{$keyword}%");
+            
+
         $processes = $query->get();
 
         return view('process/add', compact('keyword', 'processes'));

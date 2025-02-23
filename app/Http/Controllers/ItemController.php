@@ -17,7 +17,7 @@ class ItemController extends Controller
     public function index()
     {
         // 部品一覧取得
-        $items = Item::all();
+        $items = Item::where('user_id', auth()->id())->get();
 
         return view('item.index', compact('items'));
     }
@@ -66,7 +66,7 @@ class ItemController extends Controller
             return redirect('/items')->with('success', '登録されました。');
         }
 
-        $processes = Process::all(); 
+        $processes = Process::where('user_id', auth()->id())->get(); 
         return view('item.add', compact('processes'));
     
     }
@@ -77,7 +77,7 @@ class ItemController extends Controller
     public function itemEdit(Request $request){
 
         $item = Item::find($request->id);
-        $processes = Process::all(); 
+        $processes = Process::where('user_id', auth()->id())->get(); 
         
         if ($item === null) {
             return redirect('/items')->with('error', '指定されたアイテムが見つかりません。');
@@ -160,16 +160,21 @@ class ItemController extends Controller
      * 工程名検索
      */
     public function itemSearch(Request $request){
+
         $keyword = $request->input('keyword');
-        $query = Item::query();
-        $query->where('name', 'LIKE', "%{$keyword}%")
-            ->orwhere('price', 'LIKE', "%{$keyword}%")
-            ->orwhere('quantity', 'LIKE', "%{$keyword}%")
-            ->orwhere('purchase_at', 'LIKE', "%{$keyword}%")
-            ->orwhere('detail', 'LIKE', "%{$keyword}%")
-            ->orwherehas('process', function($q) use ($keyword){
-                $q->where('name', 'LIKE', "%{$keyword}%");
+
+        $query = Item::where('user_id', auth()->id())
+            ->where(function ($query) use ($keyword) {
+                $query->where ('name', 'LIKE', "%{$keyword}%")
+                ->orwhere('price', 'LIKE', "%{$keyword}%")
+                ->orwhere('quantity', 'LIKE', "%{$keyword}%")
+                ->orwhere('purchase_at', 'LIKE', "%{$keyword}%")
+                ->orwhere('detail', 'LIKE', "%{$keyword}%")
+                ->orwherehas('process', function($q) use ($keyword){
+                    $q->where('name', 'LIKE', "%{$keyword}%");
+                });
             });
+
         $items = $query->get();
 
         return view('item/index', compact('keyword', 'items'));

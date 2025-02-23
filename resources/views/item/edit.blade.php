@@ -75,7 +75,7 @@
                             @if(isset($item->image))
                                 <div class="d-flex">
                                     <p class="mr-4 mt-4">現在の画像</p>
-                                    <a href="{{ asset($item->image) }}" data-lightbox="group" data-title="画像" class="mb-3">
+                                    <a href="{{ asset($item->image) }}" data-lightbox="group" data-title="{{ $item->name }}" class="mb-3">
                                         <img src="{{ asset($item->image) }}" alt="画像" width="100">
                                     </a>
                                 </div>
