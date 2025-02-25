@@ -63,7 +63,7 @@
                 const exists = @json($exists);
                 if(!exists){
                     alert('選択した年のデータはありません。');
-                    window.location.href = "/chart";
+                    window.location.href = "/";
                 }
 
                  // 前のグラフがある場合は削除
