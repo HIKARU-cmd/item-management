@@ -11,8 +11,13 @@ class ChartController extends Controller
 {
     public function index(Request $request){
 
+        $latestYear = Item::where('user_id', auth()->id())
+        ->selectRaw('YEAR(purchase_at) as year')
+        ->orderBy('year', 'desc')
+        ->value('year'); // 最初の year の値を取得
+        
         // 選択された年を取得(デフォルトでは今年を取得)
-        $selectedYear = $request->input('year', Carbon::now()->year);
+        $selectedYear = $request->input('year', $latestYear ?? Carbon::now()->year);
         $selectedMonth = $request->input('month', Carbon::now()->month);
 
         // 選択or入力された年がBDの存在するか確認

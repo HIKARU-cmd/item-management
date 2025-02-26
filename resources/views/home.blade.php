@@ -37,12 +37,13 @@
         <div class="container mt-5" style="padding: 0;">
             <div class="row">
                 <!-- 1つ目のグラフ -->
-                <div class="col-md-6">
+                {{-- <div class="col-md-6"> --}}
+                <div style="width: 50%; height: 350px; margin: 0 auto;">
                     <canvas id="itemsChart" style="width: 100%; height: 100%;"></canvas>
                 </div>
         
                 <!-- 2つ目のグラフ -->
-                <div class="col-md-6">
+                <div style="width: 50%; height: 350px; margin: 0 auto;">
                     <canvas id="processChart" style="width: 100%; height: 100%;"></canvas>
                 </div>
             </div>
@@ -105,7 +106,8 @@
                                                         font: {size: 16}
                                                     },
                                                     ticks: {
-                                                        font: {size: 16}
+                                                        font: {size: 10},
+                                                        autoSkip: false
                                                     }
                                                 },
                                             x: {
