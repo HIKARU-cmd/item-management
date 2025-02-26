@@ -72,13 +72,14 @@
                     </div>
                     <div class="form-group">
                         <label for="image">画像</label>
-                            @if(isset($item->image))
+                            @if($item->image)
                                 <div class="d-flex">
                                     <p class="mr-4 mt-4">現在の画像</p>
-                                    <a href="{{ asset($item->image) }}" data-lightbox="group" data-title="{{ $item->name }}" class="mb-3">
-                                        <img src="{{ asset($item->image) }}" alt="画像" width="100">
+                                    <a href="data:image/jpeg;base64,{{ $item->image }}" data-lightbox="group" data-title="{{ $item->name }}" class="mb-3">
+                                        <img src="data:image/jpeg;base64,{{ $item->image }}" alt="画像" width="100">
                                     </a>
                                 </div>
+                                <input type="hidden" name="current_image" value="{{ $item->image }}">
                             @endif
                         <input type="file" class="form-control" id="image" name="image" value="{{ $item->image ?? ''}}">
                     </div>

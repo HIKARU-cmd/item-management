@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
             $table->date('purchase_at');
             $table->string('detail', 500)->nullable();
-            $table->string('image')->nullable();
+            $table->longText('image')->nullable();
             $table->timestamps();
         });
     }

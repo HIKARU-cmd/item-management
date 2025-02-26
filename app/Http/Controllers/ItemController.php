@@ -37,18 +37,18 @@ class ItemController extends Controller
                 'quantity' => 'required|integer|min:1',
                 'purchase_at' => 'required|date|before:tomorrow',
                 'detail' => 'nullable|string|max:500',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             // 購入日を年月日までの表示としている
             $purchaseAtFormatted = Carbon::parse($request->purchase_at)->format('Y-m-d');
 
-            $image_path = null;
+            $image_base64 = null;
             if($request->hasFile('image')){
                 // ファイルを`storage/app/public/img/` に保存
-                $image_path = $request->file('image')->store('public/img');
+                $image = $request->file('image');
                 // DBにはstorage/img/sample.jpgの形で保存
-                $image_path = str_replace('public/', 'storage/', $image_path);
+                $image_base64 = base64_encode(file_get_contents($image->getRealPath()));
             }
 
             // 商品登録
@@ -60,7 +60,7 @@ class ItemController extends Controller
                 'quantity' => $request->quantity,
                 'purchase_at' => $purchaseAtFormatted,
                 'detail' => $request->detail,
-                'image' => $image_path,
+                'image' => $image_base64,
             ]);
             
             return redirect('/items')->with('success', '登録されました。');
@@ -96,27 +96,30 @@ class ItemController extends Controller
             'quantity' => 'required|integer|min:1',
             'purchase_at' => 'required|date|before:tomorrow',
             'detail' => 'nullable|string|max:500',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         
         $purchaseAtFormatted = Carbon::parse($request->purchase_at)->format('Y-m-d');
-
-        $image_path = null;
-        if($request->hasFile('image')){
-            // ファイルを`storage/app/public/img/` に保存
-            $image_path = $request->file('image')->store('public/img');
-            // DBにはstorage/img/sample.jpgの形で保存
-            $image_path = str_replace('public/', 'storage/', $image_path);
-        }
         
         $item = Item::find($request->id);
+
+        if(!$item){
+            return redirect('/items')->with('error', '指定されたアイテムが見つかりません。');
+        }
+
+        if($request->hasfile('image')){
+            $image = $request->file('image');
+            $item->image = base64_encode(file_get_contents($image->getRealPath()));
+        } else {
+            $item->image = $request->current_image;
+        }
+
         $item->name = $request->name;
         $item->process_id = $request->process_id;
         $item->price = $request->price;
         $item->quantity = $request->quantity;
         $item->purchase_at = $request->purchase_at;
         $item->detail = $request->detail;
-        $item->image = $image_path;
         $item->save();
 
         return redirect('/items')->with('success', '編集が成功しました。');
