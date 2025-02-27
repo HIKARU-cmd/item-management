@@ -68,6 +68,8 @@ class ImportController extends Controller
                 'quantity' => $rowData['quantity'],
                 'purchase_at' => $rowData['purchase_at'],
                 'detail' => $rowData['detail'] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
 
         }

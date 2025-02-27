@@ -19,7 +19,7 @@ class ExportController extends Controller
             fwrite($handle, "\xEF\xBB\xBF");
             
             //ヘッダーを追加
-            fputcsv($handle, ["name", "process_id","process_name", "price", "quantity", "purchase_at", "detail", "image"]);
+            fputcsv($handle, ["name", "process_id","process_name", "price", "quantity", "purchase_at", "detail", "image", "created_at"]);
             
             // データ取得
             $items = Item::where('user_id', auth()->id())->get();
@@ -33,7 +33,8 @@ class ExportController extends Controller
                     $item->quantity,
                     $item->purchase_at,
                     $item->detail,
-                    $item->image ? "画像あり" : "画像なし"
+                    $item->image ? "画像あり" : "画像なし",
+                    $item->created_at
                 ]);
             }
             
