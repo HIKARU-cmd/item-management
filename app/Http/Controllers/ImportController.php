@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class ImportController extends Controller
 {
@@ -47,7 +48,12 @@ class ImportController extends Controller
             // csvファイルデータのバリデーション
             $validator = Validator::make($rowData, [
                 'name' => 'required|max:100',
-                'process_id' => 'required|exists:processes,id',
+                'process_id' => [
+                'required',
+                    Rule::exists('processes', 'id')->where(function ($query) {
+                        $query->where('user_id', Auth::id()); // ログインユーザーが所有する processes.id のみ
+                        }),
+                    ],
                 'price' => 'required|integer|min:0',
                 'quantity' => 'required|integer|min:1',
                 'purchase_at' => 'required|date|before:tomorrow',
