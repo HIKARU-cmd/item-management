@@ -17,7 +17,9 @@ class ItemController extends Controller
     public function index()
     {
         // 部品一覧取得
-        $items = Item::where('user_id', auth()->id())->get();
+        $items = Item::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('item.index', compact('items'));
     }
