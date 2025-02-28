@@ -30,18 +30,45 @@ class ImportController extends Controller
         // ヘッダー行を配列で格納
         $header = fgetcsv($handle);
         $header[0] = str_replace("\u{FEFF}", '', $header[0]);
-        $lineNumber = 0;
 
+        // DBに保存できるヘッダーカラムか確認
+        $expectedHeader = ['name', 'process_id', 'price', 'quantity', 'purchase_at', 'detail'];
+        if($header !== $expectedHeader) {
+            // ヘッダーカラムがあっていない場合、CSVを閉じる
+            fclose($handle);
+            return redirect('/items/add')->with('error', 'CSVのフォーマットが正しくありません。ヘッダーカラムを"name, process_id, price, quantity, purchase_at, detail" にして下さい。');
+        }
+
+        $batchSize = 1000; // 一度に保存するデータ
+        $data = [];
+        $lineNumber = 0;
+        
         // csvデータの処理
         while(($row = fgetcsv($handle)) !== false ){
+
+            // 行番号をインクリメント
+            $lineNumber++;
 
             // 空の行はカウント無し
             if(empty(array_filter($row))){
                 continue;
             };
+            
+            // ヘッダーの要素数をカウント
+            $columnCount = count($expectedHeader);
 
-            // 行番号をインクリメント
-            $lineNumber++;
+            // 入力データがヘッダーの要素数より多い場合
+            if(count($row) > $columnCount) {
+                fclose($handle);
+                return redirect('/items/add')->with('error', $lineNumber. '行目の入力形式を確認してください。ヘッダーの要素数と合っていないため、インポートできません。');
+            }
+
+            // 入力データがヘッダーの要素数より少ない場合
+            if(count($row) < $columnCount){
+                // データに空があった場合は、nullを入れる。不正な入力の場合、後のバリデーションで処理を止める
+                $row = array_pad($row, 6, null);
+            }
+
             // csvファイルのカラムとデータを連想配列として生成、$headerをkey、$rowをvalueとして配列を生成
             $rowData = array_combine($header, $row);
             
@@ -78,13 +105,21 @@ class ImportController extends Controller
                 'updated_at' => now(),
             ];
 
+            // 1000件ごとにDBへ保存
+            if(count($data) >= $batchSize){
+                Item::insert($data);
+                $data = [];
+            }
+
+        }
+
+        // データをデータベースに保存
+        if(!empty($data)){
+            Item::insert($data);
         }
                 
         // ファイルを閉じる
         fclose($handle);
-
-            // データをデータベースに保存
-            Item::insert($data);
 
         return redirect('/items')->with('success', 'csvファイルを正常にインポートしました。');
 
