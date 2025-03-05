@@ -18,10 +18,12 @@ class ItemController extends Controller
     {
         $sortColumn = $request->get('sort', 'created_at'); // デフォルトは作成日とする
         $sortDirection = $request->get('direction', 'desc'); // デフォルトは降順
-
+        $limit = $request->get('limit', 30); // デフォルトでは10件の表示
+        
         // 許可された入力
         $allowedColumns = ['price', 'quantity', 'purchase_at', 'created_at'];
         $allowedDirections = ['asc', 'desc'];
+        $allowedLimit = [30, 100, 150];
         $needsRedirect = false;
         
         // 許可されてないsort入力の場合
@@ -34,20 +36,38 @@ class ItemController extends Controller
             $sortDirection = 'desc';
             $needsRedirect = true;
         }
+        // 許可されてないlimit入力の場合
+        if(!in_array($limit, $allowedLimit)) {
+            $limit = 30;
+            $needsRedirect = true;
+        }
         // 許可されていない入力の場合、リダイレクト
         if($needsRedirect) {
             return redirect()->route('item', [
                 'sort' => $sortColumn,
-                'direction' => $sortDirection
+                'direction' => $sortDirection,
+                'limit' => $limit
             ]);
         }
 
         // 部品一覧取得
         $items = Item::where('user_id', auth()->id())
             ->orderBy($sortColumn, $sortDirection)
-            ->get();
+            ->paginate($limit);
 
-        return view('item.index', compact('items', 'sortColumn', 'sortDirection'));
+        // 存在しないページが入力された場合
+        $lastPage = $items->lastPage();
+        $currentPage = $request->get('page', 1);
+        if($currentPage > $lastPage || $currentPage < 1){
+            return redirect()->route('item', [
+                'sort' => $sortColumn,
+                'direction' => $sortDirection,
+                'limit' => $limit,
+                'page' => $lastPage
+            ]);
+        }
+
+        return view('item.index', compact('items', 'sortColumn', 'sortDirection', 'limit'));
     }
 
     /**
@@ -192,7 +212,15 @@ class ItemController extends Controller
      */
     public function itemSearch(Request $request){
 
-        $keyword = $request->input('keyword');
+        $sortColumn = $request->get('sort', 'created_at'); // デフォルトは作成日とする
+        $sortDirection = $request->get('direction', 'desc'); // デフォルトは降順
+        $limit = $request->get('limit', 30); // デフォルトでは10件の表示
+
+        // 検索文字のバリデーション
+        $validated = $request->validate([
+            'keyword' => ['nullable', 'max:255']
+        ]);
+        $keyword = $validated['keyword'] ?? null;
 
         $query = Item::where('user_id', auth()->id())
             ->where(function ($query) use ($keyword) {
@@ -206,9 +234,11 @@ class ItemController extends Controller
                 });
             });
 
-        $items = $query->get();
+        $items = $query->orderBy($sortColumn, $sortDirection)
+                ->paginate($limit);
 
-        return view('item/index', compact('keyword', 'items'));
+
+        return view('item/index', compact('keyword', 'items', 'sortColumn', 'sortDirection', 'limit'));
 
     }
 

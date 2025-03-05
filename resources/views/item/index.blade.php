@@ -39,7 +39,7 @@
     <div class="mr-4" style="font-size: 1.3rem;">
         <form action="{{ route('itemSearch') }}" method="GET">
             <label for="search">購入部品検索</label>
-            <input type="text" id="search" name="keyword" value="{{ $keyword->name ?? '' }}">
+            <input type="text" id="search" name="keyword" value="{{ $keyword ?? '' }}">
             <input type="submit" value="検索">
         </form>
         <a class="btn btn-success mt-3 " style="font-size: 1.3rem;" href="{{route('item')}}" role="button">購入部品を全て表示する</a>
@@ -138,6 +138,25 @@
                 </table>
             </div>
             </form>
+            <div class="d-flex justify-content-center">
+                <form action="{{ route('item') }}" method="get" class="mr-4">
+                    <label for="limit">表示件数：</label>
+                    <select name="limit" id="limit" onchange="this.form.submit()">
+                        <option value="30" @if($limit == 30) selected @endif>30件</option>
+                        <option value="100" @if($limit == 100) selected @endif>100件</option>
+                        <option value="150" @if($limit == 150) selected @endif>150件</option>
+                    </select>
+                    <input type="hidden" name="sort" value="{{ $sortColumn }}">
+                    <input type="hidden" name="direction" value="{{ $sortDirection }}">
+                </form>
+                {{ $items->appends([
+                    'sort' => $sortColumn, 
+                    'direction' => $sortDirection, 
+                    'limit' => $limit, 
+                    'keyword' => $keyword ?? null
+                    ])
+                    -> links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>
