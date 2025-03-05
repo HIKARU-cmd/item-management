@@ -51,7 +51,14 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header ">
-                <h3 class="card-title">購入部品一覧</h3>
+                <div class="d-flex align-items-center justify-content-start">
+                    <h3 class="card-title mr-3">購入部品一覧</h3>
+                    <form action="{{ route('item', ['sort' => 'created_at', 'direction' => 'desc']) }}" method="GET">
+                        <input type="hidden" name="sort" value="created_at">
+                        <input type="hidden" name="direction" value="desc">
+                        <button type="submit" class="btn btn-success">登録順に並び変える</button>
+                    </form>
+                </div>
                 <div class="card-tools">
                     <div class="input-group input-group-sm">
                         <div class="input-group-append">
@@ -71,9 +78,21 @@
                             <th>ID</th>
                             <th>品名</th>
                             <th>工程名</th>
-                            <th>単価</th>
-                            <th>数量</th>
-                            <th>購入日</th>
+                            <th>
+                                <a href="{{ route('item', ['sort' => 'price', 'direction' => ($sortColumn == 'price' && $sortDirection == 'asc') ? 'desc' : 'asc']) }}">
+                                    単価
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('item', ['sort' => 'quantity', 'direction' => ($sortColumn == 'quantity' && $sortDirection == 'asc') ? 'desc' : 'asc']) }}">
+                                    数量
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('item', ['sort' => 'purchase_at', 'direction' => ($sortColumn == 'purchase_at' && $sortDirection == 'asc') ? 'desc' : 'asc']) }}">
+                                    購入日
+                                </a>
+                            </th>
                             <th>詳細</th>
                             <th>画像</th>
                             <th>操作</th>

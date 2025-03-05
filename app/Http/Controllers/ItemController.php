@@ -14,14 +14,40 @@ class ItemController extends Controller
     /**
      * 部品一覧
      */
-    public function index()
+    public function index(Request $request)
     {
+        $sortColumn = $request->get('sort', 'created_at'); // デフォルトは作成日とする
+        $sortDirection = $request->get('direction', 'desc'); // デフォルトは降順
+
+        // 許可された入力
+        $allowedColumns = ['price', 'quantity', 'purchase_at', 'created_at'];
+        $allowedDirections = ['asc', 'desc'];
+        $needsRedirect = false;
+        
+        // 許可されてないsort入力の場合
+        if(!in_array($sortColumn, $allowedColumns)) {
+            $sortColumn = 'created_at';
+            $needsRedirect = true;
+        }
+        // 許可されてないdirection入力の場合
+        if(!in_array($sortDirection, $allowedDirections)) {
+            $sortDirection = 'desc';
+            $needsRedirect = true;
+        }
+        // 許可されていない入力の場合、リダイレクト
+        if($needsRedirect) {
+            return redirect()->route('item', [
+                'sort' => $sortColumn,
+                'direction' => $sortDirection
+            ]);
+        }
+
         // 部品一覧取得
         $items = Item::where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
+            ->orderBy($sortColumn, $sortDirection)
             ->get();
 
-        return view('item.index', compact('items'));
+        return view('item.index', compact('items', 'sortColumn', 'sortDirection'));
     }
 
     /**

@@ -69,7 +69,10 @@ class ChartController extends Controller
             ->pluck('total', 'process_id'); 
 
         $processes = Process::where('user_id', auth()->id())
-            ->whereIn('id', $processData->keys())->get()->pluck('name', 'id');
+            ->whereIn('id', $processData->keys())
+            ->get()
+            ->pluck('name', 'id');
+            
         $processChartData = $processData->map(function($total, $process_id) use ($processes) {
             return ['process' => $processes[$process_id], 'total' => $total];
         })->values();
